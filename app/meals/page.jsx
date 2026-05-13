@@ -1,15 +1,24 @@
 import MealsGrid from "@/components/meals/MealsGrid";
 import styles from "./page.module.css";
 import Link from "next/link";
+import { Suspense } from "react";
+import { getMeals } from "@/lib/meals";
 export const metadata = {
   title: "meals page",
 };
-export default function Meals() {
+async function Meals() {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  const meals = await getMeals();
+  
+  // throw new Error("meals can not be fetched!"); //TO TEST ERROR PAGE!!!!
+  return <MealsGrid meals={meals} />;
+}
+export default async function MealsPage() {
   return (
     <>
       <header className={styles.header}>
         <h1>
-          Delicious meals created{" "}
+          Delicious meals created
           <span className={styles.highlight}>by you</span>
         </h1>
         <p>
@@ -20,7 +29,11 @@ export default function Meals() {
         </p>
       </header>
       <main className={styles.main}>
-        <MealsGrid meals={[]} />
+        <Suspense
+          fallback={<p className={styles.loading}>fetching meals...</p>}
+        >
+          <Meals />
+        </Suspense>
       </main>
     </>
   );
