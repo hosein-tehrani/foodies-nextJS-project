@@ -96,3 +96,12 @@
   color: #979797;
   cursor: not-allowed;
 }
+.error {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 2px solid #fd4715;
+  background-color: #ec5b32;
+  text-align: center;
+  color: #fff;
+}

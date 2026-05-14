@@ -1,19 +1,12 @@
+"use client";
+
 import ImagePicker from "@/components/images/ImagePicker";
 import classes from "./page.module.css";
-import { saveMeal } from "@/lib/meals";
+import { addMeal } from "@/lib/actions";
+import MealFormSubmit from "@/components/meals/Meal-form-submit";
+import { useFormState } from "react-dom";
 export default function ShareMealPage() {
-  async function addMeal(formData) {
-    "use server";
-    const meal = {
-      title: formData.get("title"),
-      summary: formData.get("summary"),
-      creator: formData.get("creator"),
-      creator_email: formData.get("creator_email"),
-      instructions: formData.get("instructions"),
-      image: formData.get("image"),
-    };
-    await saveMeal(meal)
-  }
+  const [state, formAction] = useFormState(addMeal, { message: null });
   return (
     <>
       <header className={classes.header}>
@@ -23,7 +16,7 @@ export default function ShareMealPage() {
         <p>Or any other meal you feel needs sharing!</p>
       </header>
       <main className={classes.main}>
-        <form className={classes.form} action={addMeal}>
+        <form className={classes.form} action={formAction}>
           <div className={classes.row}>
             <p>
               <label htmlFor="name">Your name</label>
@@ -53,7 +46,8 @@ export default function ShareMealPage() {
           </p>
           <ImagePicker name="image" label="image" />
           <p className={classes.actions}>
-            <button type="submit">Share Meal</button>
+            {state.message && <p className={classes.error}>{state.message}</p>}
+            <MealFormSubmit />
           </p>
         </form>
       </main>
