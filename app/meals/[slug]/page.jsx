@@ -2,10 +2,21 @@ import { getMeal } from "@/lib/meals";
 import Image from "next/image";
 import classes from "./page.module.css";
 import { notFound } from "next/navigation";
+
+export async function generateMetadata({ params }) {
+  const meal = await getMeal(params.slug);
+    if (!meal) {
+    notFound();
+  }
+  return {
+    title: meal.title,
+    description: meal.summary,
+  };
+}
 export default async function MealDetail({ params }) {
   const meal = await getMeal(params.slug);
   if (!meal) {
-    notFound()
+    notFound();
   }
   meal.instructions = meal.instructions.replace(/\n/g, "<br />");
 
